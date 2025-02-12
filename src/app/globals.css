@@ -2,20 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Scale Down Animation */
+.dropdown_menu {
+  display: none;
+  transform-origin: top center;
+  opacity: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.group:hover .dropdown_menu {
+  display: block;
+  animation: scaleDown 300ms ease-in-out forwards;
+}
+
+@keyframes scaleDown {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
   }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  80% {
+    transform: scaleY(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
 }

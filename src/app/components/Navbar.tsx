@@ -1,77 +1,50 @@
-// app/components/Navbar.tsx
+// src/app/components/Navbar.tsx
 "use client";
+import React from "react";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { useCart } from "../../context/CartContext";
+import { ShoppingCart } from "lucide-react";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [categories, setCategories] = useState<string[]>([]);
-
-  useEffect(() => {
-    fetch("https://fakestoreapi.com/products/categories")
-      .then((res) => res.json())
-      .then((json) => setCategories(json));
-  }, []);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const { cart } = useCart();
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <nav className="bg-black text-white shadow-lg fixed w-full z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <div className="text-2xl font-bold text-red-600">Hassan`s</div>
-
-          <div className="hidden md:flex space-x-8 items-center">
-            <Link href="/" className="hover:text-red-600 transition duration-300">
-              Home
-            </Link>
-
-            <div className="group relative">
-              <Link
-                href="/products"
-                className="hover:text-red-600 transition duration-300"
-              >
-                Categories
-              </Link>
-              <ul className="dropdown_menu absolute left-0 w-32 bg-black text-white  rounded-lg overflow-hidden shadow-lg hidden group-hover:block">
-                {categories.map((category) => (
-                  <li
-                    key={category}
-                    className="py-2 px-4 hover:bg-red-600"
-                  >
-                    <Link href={`/products/${category}`}>
-                      {category.charAt(0).toUpperCase() + category.slice(1)}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <Link href="/about" className="hover:text-red-600 transition duration-300">
-              About
-            </Link>
-            <Link href="#" className="hover:text-red-600 transition duration-300">
-              Cart
-            </Link>
-            <Link href="#" className="hover:text-red-600 transition duration-300">
-              Contact
-            </Link>
-          </div>
-
-          <div className="flex items-center md:hidden">
-            <button
-              onClick={toggleMenu}
-              className="text-white focus:outline-none"
-            >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <nav className="fixed top-0 left-0 w-full bg-black text-white py-4 shadow-lg z-50">
+    <div className="container mx-auto flex justify-between items-center px-4">
+      <Link href="/">
+        <h1 className="text-3xl font-bold text-red-600 cursor-pointer">Hassan`s</h1>
+      </Link>
+      <ul className="flex items-center space-x-8">
+        <li>
+          <Link href="/" className="hover:text-red-500 transition duration-300">
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link href="/about" className="hover:text-red-500 transition duration-300">
+            About
+          </Link>
+        </li>
+        <li>
+          <Link href="/contact" className="hover:text-red-500 transition duration-300">
+            Contact
+          </Link>
+        </li>
+        <li className="relative">
+          <Link href="/cart" className="hover:text-red-500 transition duration-300">
+            <ShoppingCart size={28} />
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                {totalItems}
+              </span>
+            )}
+          </Link>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
   );
 };
 
